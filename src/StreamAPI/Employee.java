@@ -3,7 +3,6 @@ package StreamAPI;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,21 +49,14 @@ public class Employee {
      */
 
     public static Map<String, BigDecimal> averageSalaryByCompany(List<Employee> employees){
-        Map<String, List<BigDecimal>> groupingByCompany = employees.stream().collect
-                (Collectors.groupingBy(Employee::getCompany, Collectors.mapping(Employee::getSalary, Collectors.toList())));
-
-        Map<String, BigDecimal> averageSalaryByCompany = new HashMap<>();
-
-        for (Map.Entry<String, List<BigDecimal>> entry : groupingByCompany.entrySet()) {
-            averageSalaryByCompany.put(entry.getKey(), average(entry.getValue()));
-        }
-
-        return averageSalaryByCompany;
-    }
-
-    private static BigDecimal average(List<BigDecimal> salaryList){
-        BigDecimal sum = salaryList.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-        return sum.divide(BigDecimal.valueOf(salaryList.size()), 2, RoundingMode.HALF_UP);
+        return employees.stream().collect
+                (Collectors.groupingBy(Employee::getCompany,
+                        Collectors.mapping(Employee::getSalary,
+                                Collectors.teeing(
+                                        Collectors.reducing(BigDecimal.ZERO, BigDecimal::add),
+                                        Collectors.counting(),
+                                        (sum, count) -> sum.divide(BigDecimal.valueOf(count), 2, RoundingMode.HALF_UP)
+                                ))));
     }
 
     /**
