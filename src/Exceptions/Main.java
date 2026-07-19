@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
@@ -48,12 +48,10 @@ public class Main {
     public long countOfNonEmptyLines(String URI){
         Validator.validateString(URI, "Путь к файлу не может быть пустым");
         final Path path = Paths.get(URI);
-        final List<String> allLines;
-        try {
-            allLines = Files.readAllLines(path);
+        try (Stream<String> lines = Files.lines(path)){
+            return lines.filter(line -> !line.isBlank()).count();
         } catch (IOException e) {
-            throw new ReadFileException("Ошибка при чтении строк файла, путь: " + URI, e.getCause());
+            throw new ReadFileException("Ошибка при чтении строк файла, путь: " + URI, e);
         }
-        return allLines.stream().filter(line -> !line.isBlank()).count();
     }
 }

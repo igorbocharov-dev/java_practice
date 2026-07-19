@@ -16,35 +16,31 @@ import java.util.Set;
  */
 public class PhoneBook {
 
-    private final Map<String, Set<Integer>> phoneBook = new LinkedHashMap<>();
+    private final Map<String, Set<Long>> phoneBook = new LinkedHashMap<>();
 
-    private Set<Integer> phoneNumbers;
-
-    public void addNumber(String name, Integer number){
+    public void addNumber(String name, Long number){
         Validator.validateString(name, "Не корректный формат имени");
-        Validator.validateInt(number, "Не корректный формат номера");
-        if(!phoneBook.containsKey(name)){
-            phoneNumbers = new LinkedHashSet<>();
-            phoneNumbers.add(number);
-            phoneBook.put(name, phoneNumbers);
+        Validator.validateLong(number, "Не корректный формат номера");
+        if(phoneBook.containsKey(name)){
+            phoneBook.get(name).add(number);
             return;
         }
+        Set<Long> phoneNumbers = new LinkedHashSet<>();
         phoneNumbers.add(number);
         phoneBook.put(name, phoneNumbers);
     }
 
-    // Наружу выдается Set номеров телефонов для каждого имени свой (наружу копия вроде и выдается по итогу)
-    public Set<Integer> getNumbers(String name){
+    public Set<Long> getNumbers(String name){
         Validator.validateString(name, "Не корректный формат имени");
         if(!phoneBook.containsKey(name)){
             return Set.of();
         }
-        return phoneBook.get(name);
+        return new LinkedHashSet<>(phoneBook.get(name));
     }
 
-    public void removeNumber(String name, Integer number){
+    public void removeNumber(String name, Long number){
         Validator.validateString(name, "Не корректный формат имени");
-        Validator.validateInt(number, "Не корректный формат номера");
+        Validator.validateLong(number, "Не корректный формат номера");
         PhoneBookValidator.checkName(name, phoneBook);
         if(phoneBook.get(name).isEmpty()){
             phoneBook.remove(name);

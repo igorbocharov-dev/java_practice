@@ -10,7 +10,7 @@ public final class Validator {
         }
     }
 
-    public static void validateInt(Integer number, String message){
+    public static void validateLong(Long number, String message){
         if(number == null || number <= 0){
             throw new IllegalArgumentException(message);
         }
