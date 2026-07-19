@@ -14,6 +14,7 @@ public class Main {
      */
 
     public static boolean isPalindrome(String s){
+        if(s == null || s.isBlank()) throw new IllegalArgumentException("Значение не должно быть пустым");
         String normalizedString = s.toLowerCase().trim().replace(" ", "");
         StringBuilder stringBuilder = new StringBuilder();
         String str = stringBuilder.append(normalizedString).toString();
@@ -26,6 +27,7 @@ public class Main {
      */
 
     public static Map<Character, Integer> countChars(String s){
+        if(s == null || s.isBlank()) throw new IllegalArgumentException("Значение не должно быть пустым");
         Map<Character, Integer> map = new LinkedHashMap<>();
         char [] chars = s.toCharArray();
         for (Character aChar : chars) {
