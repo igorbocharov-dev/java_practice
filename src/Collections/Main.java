@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println(wordFrequency("один, два, два, три, три три четыре четыре четыре четыре пять пять пять пять пять шесть шесть шесть шесть шесть шесть "));
+
     }
 
     /**
@@ -19,7 +19,7 @@ public class Main {
     /**
      * Метод mergeSorted(List a, List b) - слить два отсортированных списка в один отсортированный
      */
-    public static <T> List<T> mergeSorted(List<T> list1, List<T> list2) {
+    public static <T extends Comparable<? super T>> List<T> mergeSorted(List<T> list1, List<T> list2) {
         List<T> merge = new ArrayList<>(list1);
         merge.addAll(list2);
         return merge.stream().sorted().collect(Collectors.toList());
@@ -29,6 +29,7 @@ public class Main {
      * Метод wordFrequency(String text) - вывести топ-3 самых частых слова в строке
      */
     public static Set<String> wordFrequency(String text) {
+        if(text == null || text.isBlank()) throw new IllegalArgumentException("Значение не должно быть пустым");
         String[] words = text.split(" |, ");
         Map<String, Integer> map = new LinkedHashMap<>();
         for (String word : words) {
