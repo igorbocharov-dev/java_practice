@@ -20,11 +20,14 @@ public class Employee {
 
     private String company;
 
+    private final EmployeeValidatorImpl employeeValidator = new EmployeeValidatorImpl();
+
     public Employee(String name, int age, BigDecimal salary, String company) {
         this.name = name;
         this.age = age;
         this.salary = salary;
         this.company = company;
+        employeeValidator.validate(this);
     }
 
     public String getName() {
@@ -48,7 +51,7 @@ public class Employee {
      * и отдает среднюю зп по каждой фирме (вернуть Map<String, BigDecimal>)
      */
 
-    public static Map<String, BigDecimal> averageSalaryByCompany(List<Employee> employees){
+    public Map<String, BigDecimal> averageSalaryByCompany(List<Employee> employees){
         return employees.stream().collect
                 (Collectors.groupingBy(Employee::getCompany,
                         Collectors.mapping(Employee::getSalary,
@@ -63,7 +66,7 @@ public class Employee {
      * Используем класс сотрудника, метод принимает список сотрудников, вернуть первого сотрудника из фирмы X.
      */
 
-    public static Employee getFirstByCompany(List<Employee> employees, String company){
+    public Employee getFirstByCompany(List<Employee> employees, String company){
         return employees.stream().filter(employee -> employee.getCompany().equals(company)).findFirst().orElseThrow();
     }
 
